@@ -1,0 +1,22 @@
+package pl.restassured.tests.testbase;
+
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
+import org.aeonbits.owner.ConfigFactory;
+import org.testng.annotations.BeforeSuite;
+import pl.restassured.main.properties.EnvironmentConfig;
+
+public class TestBase {
+
+    @BeforeSuite
+    public void setupConfiguration() {
+        EnvironmentConfig environmentConfig = ConfigFactory.create(EnvironmentConfig.class);
+
+        RestAssured.baseURI = environmentConfig.baseUri();
+        RestAssured.basePath = environmentConfig.basePath();
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        RestAssured.requestSpecification = new RequestSpecBuilder().setContentType("application/json").build();
+    }
+}
