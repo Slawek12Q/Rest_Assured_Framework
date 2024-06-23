@@ -1,5 +1,6 @@
 package pl.restassured.tests.pet;
 
+import com.github.javafaker.Faker;
 import org.testng.annotations.Test;
 import pl.restassured.main.pojo.pet.Category;
 import pl.restassured.main.pojo.pet.Pet;
@@ -13,6 +14,8 @@ import static org.testng.Assert.assertEquals;
 
 
 public class CreatePetTest extends TestBase {
+
+    Faker faker = new Faker();
 
     @Test
     public void givenPetWhenPostPetThenPetIsCreatedTest() {
