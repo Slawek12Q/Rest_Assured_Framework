@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class UserCreateResponse {
+public class ApiResponse {
 
     private Integer code;
     private String type;
