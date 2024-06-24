@@ -26,7 +26,7 @@ public class CreatePetTest extends TestBase {
                 .post("/pet")
                 .then().statusCode(200).extract().as(Pet.class);
 
-        Assertions.assertThat(actualPet).describedAs("Pet is not created").usingRecursiveComparison().isEqualTo(pet);
+        Assertions.assertThat(actualPet).describedAs("Created pet is different than actual").usingRecursiveComparison().isEqualTo(pet);
     }
 
     @AfterMethod
