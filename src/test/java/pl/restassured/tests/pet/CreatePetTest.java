@@ -1,5 +1,6 @@
 package pl.restassured.tests.pet;
 
+import org.assertj.core.api.Assertions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import pl.restassured.main.pojo.ApiResponse;
@@ -21,14 +22,11 @@ public class CreatePetTest extends TestBase {
         PetTestDataGenerator petTestDataGenerator = new PetTestDataGenerator();
         pet = petTestDataGenerator.generatePet();
 
-        Pet acctualPet = given().body(pet)
+        Pet actualPet = given().body(pet)
                 .post("/pet")
                 .then().statusCode(200).extract().as(Pet.class);
 
-        assertEquals(acctualPet.getId(), pet.getId());
-        assertEquals(acctualPet.getName(), pet.getName());
-        assertEquals(acctualPet.getCategory().getName(), pet.getCategory().getName());
-        assertEquals(acctualPet.getTags().get(0).getName(), pet.getTags().get(0).getName());
+        Assertions.assertThat(actualPet).describedAs("Pet is not created").usingRecursiveComparison().isEqualTo(pet);
     }
 
     @AfterMethod
