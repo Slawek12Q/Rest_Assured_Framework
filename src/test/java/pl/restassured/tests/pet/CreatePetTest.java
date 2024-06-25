@@ -5,6 +5,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import pl.restassured.main.pojo.ApiResponse;
 import pl.restassured.main.pojo.pet.Pet;
+import pl.restassured.main.rop.CreatePetEndpoint;
 import pl.restassured.main.test.data.pet.PetTestDataGenerator;
 import pl.restassured.tests.testbase.TestBase;
 
@@ -14,17 +15,18 @@ import static org.testng.Assert.assertEquals;
 
 public class CreatePetTest extends TestBase {
 
-    private Pet pet;
+    private Pet actualPet;
 
     @Test
     public void givenPetWhenPostPetThenPetIsCreatedTest() {
 
-        PetTestDataGenerator petTestDataGenerator = new PetTestDataGenerator();
-        pet = petTestDataGenerator.generatePet();
+        Pet pet = new PetTestDataGenerator().generatePet();
 
-        Pet actualPet = given().body(pet)
-                .post("/pet")
-                .then().statusCode(200).extract().as(Pet.class);
+        actualPet = new CreatePetEndpoint().setPet(pet).sendRequest().assertRequestSuccess().getResponseModel();
+
+//        Pet actualPet = given().body(pet)
+//                .post("/pet")
+//                .then().statusCode(200).extract().as(Pet.class);
 
         Assertions.assertThat(actualPet).describedAs("Created pet is different than actual").usingRecursiveComparison().isEqualTo(pet);
     }
@@ -32,11 +34,11 @@ public class CreatePetTest extends TestBase {
     @AfterMethod
     public void cleanUpAfterTest() {
         ApiResponse response = given()
-                .when().delete("/pet/" + pet.getId())
+                .when().delete("/pet/" + actualPet.getId())
                 .then().statusCode(200).extract().as(ApiResponse.class);
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getType(), "unknown");
-        assertEquals(response.getMessage(), pet.getId().toString());
+        assertEquals(response.getMessage(), actualPet.getId().toString());
     }
 }
