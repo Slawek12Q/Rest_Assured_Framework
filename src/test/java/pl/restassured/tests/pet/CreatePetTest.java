@@ -24,10 +24,6 @@ public class CreatePetTest extends TestBase {
 
         actualPet = new CreatePetEndpoint().setPet(pet).sendRequest().assertRequestSuccess().getResponseModel();
 
-//        Pet actualPet = given().body(pet)
-//                .post("/pet")
-//                .then().statusCode(200).extract().as(Pet.class);
-
         Assertions.assertThat(actualPet).describedAs("Created pet is different than actual").usingRecursiveComparison().isEqualTo(pet);
     }
 
