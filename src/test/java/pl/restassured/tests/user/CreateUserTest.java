@@ -4,6 +4,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import pl.restassured.main.pojo.ApiResponse;
 import pl.restassured.main.pojo.user.User;
+import pl.restassured.main.rop.CreateUserEndpoint;
 import pl.restassured.main.test.data.UserTestDataGenerator;
 import pl.restassured.tests.testbase.TestBase;
 
@@ -16,12 +17,9 @@ public class CreateUserTest extends TestBase {
     @Test
     public void givenUserWhenPostUserThenUserIsCreatedTest() {
 
-        UserTestDataGenerator userTestDataGenerator = new UserTestDataGenerator();
-        user = userTestDataGenerator.generateUser();
+        user = new UserTestDataGenerator().generateUser();
 
-        ApiResponse response = given().body(user)
-                .when().post("user")
-                .then().statusCode(200).extract().as(ApiResponse.class);
+        ApiResponse response = new CreateUserEndpoint().setUser(user).sendRequest().assertRequestSuccess().getResponseModel();
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getType(), "unknown");
