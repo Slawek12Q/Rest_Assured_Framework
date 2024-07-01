@@ -5,10 +5,10 @@ import org.testng.annotations.Test;
 import pl.restassured.main.pojo.ApiResponse;
 import pl.restassured.main.pojo.user.User;
 import pl.restassured.main.rop.CreateUserEndpoint;
+import pl.restassured.main.rop.DeleteUserEndpoint;
 import pl.restassured.main.test.data.UserTestDataGenerator;
 import pl.restassured.tests.testbase.TestBase;
 
-import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertEquals;
 
 public class CreateUserTest extends TestBase {
@@ -16,7 +16,6 @@ public class CreateUserTest extends TestBase {
     private User user;
     @Test
     public void givenUserWhenPostUserThenUserIsCreatedTest() {
-
         user = new UserTestDataGenerator().generateUser();
 
         ApiResponse response = new CreateUserEndpoint().setUser(user).sendRequest().assertRequestSuccess().getResponseModel();
@@ -28,9 +27,7 @@ public class CreateUserTest extends TestBase {
 
     @AfterMethod
     public void cleanUpAfterTest() {
-        ApiResponse response = given()
-                .when().delete("user/" + user.getUsername())
-                .then().statusCode(200).extract().as(ApiResponse.class);
+        ApiResponse response = new DeleteUserEndpoint().setUsername(user.getUsername()).sendRequest().assertRequestSuccess().getResponseModel();
 
         assertEquals(response.getCode(), 200);
         assertEquals(response.getType(), "unknown");
